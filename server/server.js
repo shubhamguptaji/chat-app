@@ -2,6 +2,7 @@ const path = require("path");
 const express = require("express");
 const http = require("http");
 const socketIO = require("socket.io");
+const { generateMessage } = require("./utils/message");
 
 const app = express();
 const port = process.env.PORT || 3000;
@@ -20,26 +21,19 @@ io.on("connection", (socket, err) => {
   // socket.emit("newEmail", {
   //   message: "hello"
   // });
-  socket.emit("newMessage", {
-    from: "Admin",
-    text: "Welcome to the chat app",
-    createdAt: new Date().getTime()
-  });
+  socket.emit(
+    "newMessage",
+    generateMessage("Admin", "Welcome to the chat app!")
+  );
 
-  socket.broadcast.emit("newMessage", {
-    from: "Admin",
-    text: "New user joined",
-    createdAt: new Date().getTime()
-  });
-
+  socket.broadcast.emit(
+    "newMessage",
+    generateMessage("Admin", "new user joined!")
+  );
   socket.on("createMessage", (Message, err) => {
     console.log("Create Message: ", Message);
 
-    io.emit("newMessage", {
-      from: Message.from,
-      text: Message.text,
-      createdAt: new Date().getTime()
-    });
+    io.emit("newMessage", generateMessage(Message.from, Message.text));
   });
 
   socket.on("disconnect", err => {
