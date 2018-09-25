@@ -30,10 +30,11 @@ io.on("connection", (socket, err) => {
     "newMessage",
     generateMessage("Admin", "new user joined!")
   );
-  socket.on("createMessage", (Message, err) => {
+  socket.on("createMessage", (Message, callback, err) => {
     console.log("Create Message: ", Message);
 
     io.emit("newMessage", generateMessage(Message.from, Message.text));
+    callback();
   });
 
   socket.on("disconnect", err => {
