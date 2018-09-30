@@ -42,15 +42,25 @@ io.on("connection", (socket, err) => {
 
   socket.on("createMessage", (Message, callback, err) => {
     console.log("Create Message: ", Message);
-    io.emit("newMessage", generateMessage(Message.from, Message.text));
+    var user = users.getUser(socket.id);
+    if (user && isRealString(Message.text)) {
+      io.to(user.room).emit(
+        "newMessage",
+        generateMessage(user.name, Message.text)
+      );
+    }
     callback();
   });
 
   socket.on("createLocationMessage", coords => {
-    io.emit(
-      "newLocationMessage",
-      generateLocationMessage("Admin", coords.latitude, coords.longitude)
-    );
+    var user = users.getUser(socket.id);
+
+    if (user) {
+      io.to(user.room).emit(
+        "newLocationMessage",
+        generateLocationMessage(user.name, coords.latitude, coords.longitude)
+      );
+    }
   });
 
   socket.on("disconnect", err => {
