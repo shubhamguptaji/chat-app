@@ -1,4 +1,4 @@
- const path = require("path");
+const path = require("path");
 const express = require("express");
 const http = require("http");
 const socketIO = require("socket.io");
@@ -23,9 +23,9 @@ io.on("connection", (socket, err) => {
     "newMessage",
     generateMessage("Admin", "new user joined!")
   );
+
   socket.on("createMessage", (Message, callback, err) => {
     console.log("Create Message: ", Message);
-
     io.emit("newMessage", generateMessage(Message.from, Message.text));
     callback();
   });
