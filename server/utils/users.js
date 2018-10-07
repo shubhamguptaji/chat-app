@@ -1,5 +1,5 @@
 class Users {
-  constructor(name, age) {
+  constructor(name) {
     this.users = [];
   }
 
